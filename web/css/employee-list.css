@@ -1,0 +1,102 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f8ff; /* Màu nền xanh nhạt */
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    color: #0066cc;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+form {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s;
+}
+
+select:focus {
+    border-color: #0066cc;
+    outline: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 102, 204, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #0066cc;
+    color: white;
+    font-weight: normal;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+input[type="submit"] {
+    background-color: #0066cc;
+    color: white;
+    padding: 6px 14px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #004c99;
+}
+
+p {
+    text-align: center;
+    font-weight: bold;
+}
+
+p[style*="color: green"] {
+    color: #009900 !important;
+}
+
+p[style*="color: red"] {
+    color: #cc0000 !important;
+}
+
+.unlock-btn {
+    background-color: #28a745; /* xanh lá */
+}
+
+.unlock-btn:hover {
+    background-color: #218838;
+}
+
+.lock-btn {
+    background-color: #dc3545; /* đỏ */
+}
+
+.lock-btn:hover {
+    background-color: #c82333;
+}

@@ -1,6 +1,32 @@
+# build/
+# dist/
+# *.class
+# *.log
+# *.war
+# .idea/
+
+
+# Java class files
+*.class
+
+# Log files
+*.log
+
+# Build output directories
 build/
 dist/
-*.class
-*.log
+target/
+
+# WAR/JAR/EAR files
 *.war
+*.jar
+*.ear
+
+# IDE settings
 .idea/
+*.iml
+nbproject/private/
+
+# OS-specific files
+.DS_Store
+Thumbs.db

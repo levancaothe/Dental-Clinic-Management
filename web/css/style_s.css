@@ -1,0 +1,244 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9fcff;
+    color: #333;
+    font-size: 14px;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.section1 {
+    background-color: #e6f3ff;
+    padding: 12px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.section1 .logo img {
+    height: 45px;
+}
+
+.section1 .search-box {
+    padding: 6px 10px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.actions button {
+    padding: 6px 10px;
+    border: 1px solid #007acc;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.actions button:hover {
+    background-color: #007acc;
+    color: white;
+}
+
+.section2 {
+    background-color: #cce7ff;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.section2 button {
+    padding: 6px 18px;
+    border: 1px solid #007acc;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.section2 button:hover {
+    background-color: #007acc;
+    color: white;
+}
+
+/* Active navigation button */
+.section2 button.active-nav {
+    background-color: #007acc;
+    color: white;
+    font-weight: 500;
+    border-color: #005d99;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.section2 button.booking-btn {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+    font-weight: 500;
+}
+
+.section2 button.booking-btn:hover {
+    background-color: #3e8e41;
+    border-color: #3e8e41;
+}
+
+.body-content {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 6px;
+    line-height: 1.6;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.body-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: center;
+}
+
+.body-flex .image {
+    flex: 1 1 45%;
+}
+
+.body-flex .image img {
+    width: 100%;
+    border-radius: 6px;
+}
+
+.body-flex .text {
+    flex: 1 1 50%;
+}
+
+.body-flex h1 {
+    font-size: 30px;
+    color: #007acc;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 10px;
+}
+
+.body-flex p, .body-flex ul {
+    font-size: 16px;
+}
+
+/* New Footer Styles */
+footer {
+    margin-top: auto;
+}
+
+.footer-content {
+    background-color: #007acc;
+    color: white;
+    padding: 50px 0 30px;
+}
+
+.footer-logo img {
+    height: 45px;
+}
+
+.footer-heading {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-heading:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: #fff;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-contact li {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.footer-contact li i {
+    margin-right: 10px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    margin-right: 10px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.footer-social a:hover {
+    background-color: #fff;
+    color: #007acc;
+}
+
+.footer-bottom {
+    background-color: #006bb3;
+    padding: 15px 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+.copyright {
+    font-weight: 500;
+}

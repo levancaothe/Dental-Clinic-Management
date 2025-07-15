@@ -1,0 +1,174 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : May 29, 2025, 10:37:49 AM
+    Author     : An
+*/
+
+ body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; /* Reset margin for full width header */
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .header {
+            background-color: #007bff; /* Blue header background */
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Đẩy các phần tử ra hai bên */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            position: relative; /* Để menu có thể đặt tương đối với header */
+            z-index: 100; /* Đảm bảo header nằm trên các phần tử khác */
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .header-left img {
+            height: 50px; /* Adjust logo size */
+            margin-right: 15px;
+            border-radius: 50%; /* Make logo round */
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .header-center {
+            flex-grow: 1; /* Cho phép phần tử này chiếm hết không gian còn lại */
+            text-align: center; /* Căn giữa nội dung của phần tử này */
+        }
+        .header-center h1 {
+            color: white; /* Header text color */
+            margin: 0; /* Remove default h1 margin */
+            font-size: 1.8em;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            font-size: 2em; /* Kích thước biểu tượng */
+            cursor: pointer;
+            padding: 0 10px;
+            user-select: none; /* Ngăn chặn chọn văn bản khi nhấp */
+        }
+        .menu-icon:hover {
+            opacity: 0.8;
+        }
+
+        /* Styles for the side menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -250px; /* Ban đầu ẩn menu bên phải */
+            width: 250px;
+            height: 100%;
+            background-color: #333;
+            color: white;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+            transition: right 0.3s ease-in-out; /* Hiệu ứng chuyển động */
+            z-index: 99; /* Nằm dưới header nhưng trên nội dung */
+            padding-top: 80px; /* Khoảng cách từ trên xuống để không che header */
+        }
+        .side-menu.open {
+            right: 0; /* Hiện menu ra */
+        }
+        .side-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .side-menu ul li a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: white;
+            border-bottom: 1px solid #555;
+            transition: background-color 0.3s;
+        }
+        .side-menu ul li a:hover {
+            background-color: #555;
+        }
+
+        /* Overlay for dimming background */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 98; /* Nằm dưới menu */
+            display: none; /* Ban đầu ẩn */
+        }
+        .overlay.active {
+            display: block; /* Hiện khi menu mở */
+        }
+
+        h1.page-title { /* Specific style for the main page title below header */
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            margin-top: 20px; /* Add some top margin */
+        }
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures rounded corners apply to content */
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db; 
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .status-active {
+            color: #28a745; /* Green for active */
+            font-weight: bold;
+        }
+        .status-suspended {
+            color: #dc3545; /* Red for suspended */
+            font-weight: bold;
+        }
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            padding-bottom: 20px; /* Add padding at the bottom */
+        }
+        .back-link a {
+            text-decoration: none;
+            color: #007bff;
+            padding: 10px 20px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .back-link a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+

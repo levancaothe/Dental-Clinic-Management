@@ -1,0 +1,132 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9fcff;
+    color: #333;
+    font-size: 14px;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.section1 {
+    background-color: #e6f3ff;
+    padding: 12px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.section1 .logo img {
+    height: 45px;
+}
+
+.section1 .search-box {
+    padding: 6px 10px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.actions button {
+    padding: 6px 10px;
+    border: 1px solid #007acc;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.actions button:hover {
+    background-color: #007acc;
+    color: white;
+}
+
+.section2 {
+    background-color: #cce7ff;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.section2 button {
+    padding: 6px 18px;
+    border: 1px solid #007acc;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.section2 button:hover {
+    background-color: #007acc;
+    color: white;
+}
+
+.body-content {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 6px;
+    line-height: 1.6;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.body-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: center;
+}
+
+.body-flex .image {
+    flex: 1 1 45%;
+}
+
+.body-flex .image img {
+    width: 100%;
+    border-radius: 6px;
+}
+
+.body-flex .text {
+    flex: 1 1 50%;
+}
+
+.body-flex h1 {
+    font-size: 30px;
+    color: #007acc;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 10px;
+}
+
+.body-flex p, .body-flex ul {
+    font-size: 16px;
+}
+
+footer {
+    background-color: #d0f0fd;
+    text-align: center;
+    padding: 15px;
+    font-weight: bold;
+    color: #0078B4;
+    border-top: 1px solid #ccc;
+    margin-top: auto;
+}

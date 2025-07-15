@@ -1,0 +1,67 @@
+@import url('style.css');
+
+.body-content {
+    max-width: 800px;
+}
+
+.body-content h1 {
+    font-size: 24px;
+    color: #007acc;
+    margin-bottom: 20px;
+}
+
+.booking-form .form-group {
+    margin-bottom: 15px;
+}
+
+.booking-form label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+.booking-form input[type="text"],
+.booking-form input[type="tel"],
+.booking-form input[type="date"],
+.booking-form input[type="time"],
+.booking-form select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.booking-form input[type="radio"] {
+    margin-right: 5px;
+}
+
+button[type="submit"] {
+    background-color: #007acc;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button[type="submit"]:hover {
+    background-color: #005f99;
+}
+
+.inline-radio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.half-width {
+    flex: 1;
+    min-width: 200px;
+}
