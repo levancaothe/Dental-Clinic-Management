@@ -22,13 +22,16 @@
     UserDAO userDao = new UserDAO();
     ServiceDAO serviceDao = new ServiceDAO();
 
+    String fromDate = request.getParameter("fromDate");
+    String toDate = request.getParameter("toDate");
     String statusFilter = request.getParameter("status");
-    String dateFilter = request.getParameter("date");
     String sortBy = request.getParameter("sortBy");
     String keyword = request.getParameter("keyword");
 
+    // Đảm bảo không null, tránh lỗi
     if (statusFilter == null) statusFilter = "";
-    if (dateFilter == null) dateFilter = "";
+    if (fromDate == null || fromDate.trim().isEmpty()) fromDate = "";
+    if (toDate == null || toDate.trim().isEmpty()) toDate = "";
     if (sortBy == null) sortBy = "";
     if (keyword == null) keyword = "";
 
@@ -38,35 +41,45 @@
     if (pageParam != null) {
         try {
             currentPageNum = Integer.parseInt(pageParam);
+            if (currentPageNum < 1) currentPageNum = 1;
         } catch (NumberFormatException e) {
             currentPageNum = 1;
         }
     }
 
     List<Appointment> fullList;
-    
+
     if (!keyword.trim().isEmpty()) {
-        fullList = dao.searchAppointmentsByCustomerName(keyword, statusFilter, dateFilter, sortBy);
+        fullList = dao.searchAppointmentsByCustomerName(keyword, statusFilter, fromDate, toDate, sortBy);
     } else if ("name".equalsIgnoreCase(sortBy)) {
-        fullList = dao.sortAppointmentsByCustomerNameAZ(statusFilter, dateFilter);
+        fullList = dao.sortAppointmentsByCustomerNameAZ(statusFilter, fromDate, toDate);
     } else if ("date".equalsIgnoreCase(sortBy)) {
-        fullList = dao.sortAppointmentsByDate(statusFilter, dateFilter);
+        fullList = dao.sortAppointmentsByDate(statusFilter, fromDate, toDate);
     } else {
-        if (statusFilter.isEmpty() && dateFilter.isEmpty()) {
+        if (statusFilter.isEmpty() && fromDate.isEmpty() && toDate.isEmpty()) {
             fullList = dao.getAllAppointments();
         } else {
-            fullList = dao.getFilteredAppointments(statusFilter, dateFilter);
+            fullList = dao.getFilteredAppointments(statusFilter, fromDate, toDate);
         }
     }
-   
+
     int totalAppointments = fullList.size();
     int totalPages = (int) Math.ceil((double) totalAppointments / pageSize);
+
+    if (totalPages == 0) totalPages = 1; // Đảm bảo ít nhất 1 trang để tránh lỗi phân trang
+
+    if (currentPageNum > totalPages) {
+        currentPageNum = totalPages;
+    }
+
     int start = (currentPageNum - 1) * pageSize;
     int end = Math.min(start + pageSize, totalAppointments);
-    List<Appointment> appointments = fullList.subList(start, end);
+
+    List<Appointment> appointments = (start < end) ? fullList.subList(start, end) : Collections.emptyList();
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -75,6 +88,7 @@
         <link href="./css/style_k.css" rel="stylesheet"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <style>
+            /* ... giữ nguyên CSS của bạn ... */
             .filter-form {
                 padding: 10px 20px;
                 margin: 10px 20px 0 auto;
@@ -134,7 +148,6 @@
                 gap: 5px;
                 flex-wrap: wrap;
             }
-
             .pagination-container a, .pagination-container span {
                 padding: 8px 14px;
                 border: 1px solid #64ccff;
@@ -144,12 +157,10 @@
                 font-weight: 600;
                 transition: 0.3s;
             }
-
             .pagination-container a:hover {
                 background-color: #64ccff;
                 color: white;
             }
-
             .pagination-container a.active {
                 background-color: #64ccff;
                 color: white;
@@ -161,26 +172,22 @@
                 font-size: 1.1rem;
                 color: #666;
             }
-
             .bat{
                 text-decoration: none;
             }
             .banner .logo-link {
                 display: inline-block;
             }
-
             .banner .logo-link img {
                 width: 60px;
                 height: 60px;
                 object-fit: contain;
             }
-
             .banner .logo-link {
                 border: none;
                 background: none;
                 padding: 0;
             }
-
             .banner .logo-link:hover {
                 background: none;
                 color: inherit;
@@ -224,13 +231,13 @@
                     <option value="3" <%= "3".equals(statusFilter) ? "selected" : "" %>>Đã xác nhận</option>
                 </select>
             </div>
-
             <div>
                 <label>Tìm kiếm theo thời gian:</label>
-                <input type="date" name="date" value="<%= dateFilter %>" />
+                <input type="date" name="fromDate" value="<%= fromDate %>" />
+                <span style="margin: 0 5px;">đến</span>
+                <input type="date" name="toDate" value="<%= toDate %>" />
                 <button type="submit">Tìm kiếm</button>
             </div>
-
             <div>
                 <label>Tìm kiếm theo tên bệnh nhân:</label>
                 <input type="text" name="keyword" value="<%= keyword %>" />
@@ -271,26 +278,35 @@
                             <td><%= sdf.format(a.getAppointmentDate()) %></td>
                             <td><%= a.getStatusString() %></td>
                             <td><%= a.getNote() != null ? a.getNote() : "" %></td>
-
-
                             <td class="buttons">
                                 <a href="AppointmentDetailServlet?id=<%= a.getAppointmentId() %>">
                                     <button class="btn"><i class="fas fa-eye"></i></button>
                                 </a>
-
-                                <a href="EditBookingServlet?id=<%= a.getAppointmentId() %>&status=<%= statusFilter %>&date=<%= dateFilter %>&sortBy=<%= sortBy %>&keyword=<%= keyword %>&page=<%= currentPageNum %>">
+                                <a href="EditBookingServlet?id=<%= a.getAppointmentId() %>
+                                   &status=<%= statusFilter %>
+                                   &fromDate=<%= fromDate %>
+                                   &toDate=<%= toDate %>
+                                   &sortBy=<%= sortBy %>
+                                   &keyword=<%= keyword %>
+                                   &page=<%= currentPageNum %>">
                                     <button class="btn"><i class="fas fa-edit"></i></button>
                                 </a>
-
                                 <% if (a.getDoctorId() == 0) { %>
-                                <a href="CreateBookingServlet?action=assign&id=<%= a.getAppointmentId() %>&status=<%= statusFilter %>&date=<%= dateFilter %>&sortBy=<%= sortBy %>&keyword=<%= keyword %>&page=<%= currentPageNum %>">
+                                <a href="CreateBookingServlet?action=assign&id=<%= a.getAppointmentId() %>
+                                   &status=<%= statusFilter %>
+                                   &fromDate=<%= fromDate %>
+                                   &toDate=<%= toDate %>
+                                   &sortBy=<%= sortBy %>
+                                   &keyword=<%= keyword %>
+                                   &page=<%= currentPageNum %>">
                                     <button class="btn"><i class="fas fa-user-md"></i></button>
                                 </a>
                                 <% } %>
                             </td>
                         </tr>
-                        <% } 
-                    } else { %>
+                        <% }
+                            } else {
+                        %>
                         <tr>
                             <td colspan="8" class="empty-message">Không có lịch khám nào.</td>
                         </tr>
@@ -301,8 +317,8 @@
 
             <div class="pagination-container">
                 <% if (currentPageNum > 1) { %>
-                <a href="ViewBookingServlet?page=1&status=<%= statusFilter %>&date=<%= dateFilter %>&sortBy=<%= sortBy %>&keyword=<%= keyword %>">&laquo;</a>
-                <a href="ViewBookingServlet?page=<%= currentPageNum - 1 %>&status=<%= statusFilter %>&date=<%= dateFilter %>&sortBy=<%= sortBy %>&keyword=<%= keyword %>">Trước</a>
+                <a href="ViewBookingServlet?page=1&status=<%= statusFilter %>&fromDate=<%= fromDate %>&toDate=<%= toDate %>&sortBy=<%= sortBy %>&keyword=<%= java.net.URLEncoder.encode(keyword, "UTF-8") %>">&laquo;</a>
+                <a href="ViewBookingServlet?page=<%= currentPageNum - 1 %>&status=<%= statusFilter %>&fromDate=<%= fromDate %>&toDate=<%= toDate %>&sortBy=<%= sortBy %>&keyword=<%= java.net.URLEncoder.encode(keyword, "UTF-8") %>">Trước</a>
                 <% } %>
 
                 <%
@@ -310,7 +326,7 @@
                     for (int i = 1; i <= totalPages; i++) {
                         if (i == 1 || i == totalPages || (i >= currentPageNum - 1 && i <= currentPageNum + 1)) {
                 %>
-                <a class="<%= (i == currentPageNum) ? "active" : "" %>" href="ViewBookingServlet?page=<%= i %>&status=<%= statusFilter %>&date=<%= dateFilter %>&sortBy=<%= sortBy %>&keyword=<%= keyword %>"><%= i %></a>
+                <a class="<%= (i == currentPageNum) ? "active" : "" %>" href="ViewBookingServlet?page=<%= i %>&status=<%= statusFilter %>&fromDate=<%= fromDate %>&toDate=<%= toDate %>&sortBy=<%= sortBy %>&keyword=<%= java.net.URLEncoder.encode(keyword, "UTF-8") %>"><%= i %></a>
                 <%
                         } else if (!leftDots && i < currentPageNum - 1) {
                             leftDots = true;
@@ -327,11 +343,12 @@
                 %>
 
                 <% if (currentPageNum < totalPages) { %>
-                <a href="ViewBookingServlet?page=<%= currentPageNum + 1 %>&status=<%= statusFilter %>&date=<%= dateFilter %>&sortBy=<%= sortBy %>&keyword=<%= keyword %>">Sau</a>
-                <a href="ViewBookingServlet?page=<%= totalPages %>&status=<%= statusFilter %>&date=<%= dateFilter %>&sortBy=<%= sortBy %>&keyword=<%= keyword %>">&raquo;</a>
+                <a href="ViewBookingServlet?page=<%= currentPageNum + 1 %>&status=<%= statusFilter %>&fromDate=<%= fromDate %>&toDate=<%= toDate %>&sortBy=<%= sortBy %>&keyword=<%= java.net.URLEncoder.encode(keyword, "UTF-8") %>">Sau</a>
+                <a href="ViewBookingServlet?page=<%= totalPages %>&status=<%= statusFilter %>&fromDate=<%= fromDate %>&toDate=<%= toDate %>&sortBy=<%= sortBy %>&keyword=<%= java.net.URLEncoder.encode(keyword, "UTF-8") %>">&raquo;</a>
                 <% } %>
             </div>
         </div>
+
         <footer>
             Nụ cười của bạn – Sứ mệnh của chúng tôi!
         </footer>
