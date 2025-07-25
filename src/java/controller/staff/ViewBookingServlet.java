@@ -55,7 +55,6 @@ public class ViewBookingServlet extends HttpServlet {
 
         List<Appointment> fullList;
 
-        // Ưu tiên tìm kiếm theo keyword
         if (!keyword.trim().isEmpty()) {
             fullList = dao.searchAppointmentsByCustomerName(keyword, status, fromDate, toDate, sortBy);
         } else if ("name".equalsIgnoreCase(sortBy)) {

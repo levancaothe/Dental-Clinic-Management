@@ -34,6 +34,7 @@
         <table class="table table-bordered table-hover text-center align-middle">
             <thead class="table-info">
                 <tr>
+                    <th>STT</th>
                     <th>Họ tên</th>
                     <th>Email</th>
                     <th>SĐT</th>
@@ -43,8 +44,11 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="u" items="${employees}">
+                <c:forEach var="u" items="${employees}" varStatus="loop">
                     <tr>
+                        <td>
+                            <c:out value="${(currentPage - 1) * pageSize + loop.index + 1}" />
+                        </td>
                         <td>${u.fullName}</td>
                         <td>${u.email}</td>
                         <td>${u.phoneNumber}</td>

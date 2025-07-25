@@ -21,7 +21,7 @@
     List<User> doctors = userDao.getUsersByDefaultOrder("Bác sĩ");
     List<User> customers = userDao.getUsersByDefaultOrder("Khách hàng");
     List<Service> services = serviceDao.getAllServices();
-    
+
     String error = (String) request.getAttribute("error");
     String success = (String) request.getAttribute("success");
     String selectedCustomer = String.valueOf(request.getAttribute("customerId"));
@@ -30,20 +30,46 @@
     String noteValue = request.getAttribute("note") != null ? request.getAttribute("note").toString() : "";
     String appointmentDateValue = request.getAttribute("appointmentDate") != null ? request.getAttribute("appointmentDate").toString() : "";
     String appointmentId = request.getAttribute("appointmentId") != null ? request.getAttribute("appointmentId").toString() : null;
-    
+
     String status = request.getAttribute("status") != null ? request.getAttribute("status").toString() : "";
     String date = request.getAttribute("date") != null ? request.getAttribute("date").toString() : "";
     String sortBy = request.getAttribute("sortBy") != null ? request.getAttribute("sortBy").toString() : "";
     String keyword = request.getAttribute("keyword") != null ? request.getAttribute("keyword").toString() : "";
     String pageNumber = request.getAttribute("page") != null ? request.getAttribute("page").toString() : "1";
-    
-    // Tạo url quay lại trang danh sách, giữ các tham số filter/sort/page
+
     String redirectUrl = "ViewBookingServlet"
         + "?status=" + java.net.URLEncoder.encode(status, "UTF-8")
         + "&date=" + java.net.URLEncoder.encode(date, "UTF-8")
         + "&sortBy=" + java.net.URLEncoder.encode(sortBy, "UTF-8")
         + "&keyword=" + java.net.URLEncoder.encode(keyword, "UTF-8")
         + "&page=" + java.net.URLEncoder.encode(pageNumber, "UTF-8");
+
+    // Xử lý tên bệnh nhân và dịch vụ an toàn
+    String customerName = "Không rõ";
+    if (selectedCustomer != null && !selectedCustomer.equals("null")) {
+        try {
+            User u = userDao.getUserById(Integer.parseInt(selectedCustomer));
+            if (u != null) customerName = u.getFullName();
+            else customerName = "Không tìm thấy bệnh nhân";
+        } catch (Exception e) {
+            customerName = "ID bệnh nhân không hợp lệ";
+        }
+    } else {
+        customerName = "Chưa chọn bệnh nhân";
+    }
+
+    String serviceName = "Không rõ";
+    if (selectedService != null && !selectedService.equals("null")) {
+        try {
+            Service s = serviceDao.getServiceById(Integer.parseInt(selectedService));
+            if (s != null) serviceName = s.getServiceName();
+            else serviceName = "Không tìm thấy dịch vụ";
+        } catch (Exception e) {
+            serviceName = "ID dịch vụ không hợp lệ";
+        }
+    } else {
+        serviceName = "Chưa chọn dịch vụ";
+    }
 %>
 <html>
     <head>
@@ -136,14 +162,11 @@
                 </a>
             </div>
             <div style="display: flex; gap: 12px;">
-                <a href="<%= redirectUrl %>" class="btn-r">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-                <a href="<%= dashboardUrl %>" class="btn-r">
-                    <i class="fas fa-home"></i>
-                </a>
+                <a href="<%= redirectUrl %>" class="btn-r"><i class="fas fa-arrow-left"></i></a>
+                <a href="<%= dashboardUrl %>" class="btn-r"><i class="fas fa-home"></i></a>
             </div>
         </div>
+
         <div class="content">
             <div class="form-container">
                 <div class="header">Xếp Bác Sĩ</div>
@@ -168,13 +191,13 @@
                         <input type="hidden" name="sortBy" value="<%= sortBy %>"/>
                         <input type="hidden" name="keyword" value="<%= keyword %>"/>
                         <input type="hidden" name="page" value="<%= pageNumber %>"/>
+
                         <div class="form-group">
                             <label>Bệnh nhân:</label>
                             <input type="hidden" name="customerId" value="<%= selectedCustomer %>"/>
-                            <div class="readonly-field">
-                                <%= userDao.getUserById(Integer.parseInt(selectedCustomer)).getFullName() %>
-                            </div>
+                            <div class="readonly-field"><%= customerName %></div>
                         </div>
+
                         <div class="form-group">
                             <label for="doctorId">Bác sĩ:</label>
                             <select name="doctorId" id="doctorId" required>
@@ -186,27 +209,25 @@
                                 <% } %>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label>Dịch vụ:</label>
                             <input type="hidden" name="serviceId" value="<%= selectedService %>"/>
-                            <div class="readonly-field">
-                                <%= serviceDao.getServiceById(Integer.parseInt(selectedService)).getServiceName() %>
-                            </div>
+                            <div class="readonly-field"><%= serviceName %></div>
                         </div>
+
                         <div class="form-group">
                             <label>Ngày khám:</label>
                             <input type="hidden" name="appointmentDate" value="<%= appointmentDateValue %>"/>
-                            <div class="readonly-field">
-                                <%= appointmentDateValue.replace('T', ' ') %>
-                            </div>
+                            <div class="readonly-field"><%= appointmentDateValue.replace('T', ' ') %></div>
                         </div>
+
                         <div class="form-group">
                             <label>Ghi chú:</label>
                             <input type="hidden" name="note" value="<%= noteValue %>"/>
-                            <div class="readonly-field note">
-                                <%= noteValue %>
-                            </div>
+                            <div class="readonly-field note"><%= noteValue %></div>
                         </div>
+
                         <div class="buttons">
                             <button type="submit" class="btn">Xác nhận</button>
                             <a href="<%= redirectUrl %>" class="btn-r">Huỷ</a>
@@ -216,9 +237,9 @@
                 </div>
             </div>
         </div>
-        <footer>
-            Nụ cười của bạn – Sứ mệnh của chúng tôi!
-        </footer>
+
+        <footer>Nụ cười của bạn – Sứ mệnh của chúng tôi!</footer>
+
         <script>
             function validateNote() {
                 let noteInput = document.querySelector('input[name="note"]');

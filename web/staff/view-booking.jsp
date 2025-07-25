@@ -28,7 +28,6 @@
     String sortBy = request.getParameter("sortBy");
     String keyword = request.getParameter("keyword");
 
-    // Đảm bảo không null, tránh lỗi
     if (statusFilter == null) statusFilter = "";
     if (fromDate == null || fromDate.trim().isEmpty()) fromDate = "";
     if (toDate == null || toDate.trim().isEmpty()) toDate = "";
@@ -88,7 +87,6 @@
         <link href="./css/style_k.css" rel="stylesheet"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <style>
-            /* ... giữ nguyên CSS của bạn ... */
             .filter-form {
                 padding: 10px 20px;
                 margin: 10px 20px 0 auto;
@@ -228,19 +226,18 @@
                     <option value="0" <%= "0".equals(statusFilter) ? "selected" : "" %>>Đang xử lý</option>
                     <option value="1" <%= "1".equals(statusFilter) ? "selected" : "" %>>Hoàn tất</option>
                     <option value="2" <%= "2".equals(statusFilter) ? "selected" : "" %>>Đã huỷ</option>
-                    <option value="3" <%= "3".equals(statusFilter) ? "selected" : "" %>>Đã xác nhận</option>
                 </select>
+            </div>
+            <div>
+                <label>Tìm kiếm theo tên bệnh nhân:</label>
+                <input type="text" name="keyword" value="<%= keyword %>" />
+                <button type="submit">Tìm kiếm</button>
             </div>
             <div>
                 <label>Tìm kiếm theo thời gian:</label>
                 <input type="date" name="fromDate" value="<%= fromDate %>" />
                 <span style="margin: 0 5px;">đến</span>
                 <input type="date" name="toDate" value="<%= toDate %>" />
-                <button type="submit">Tìm kiếm</button>
-            </div>
-            <div>
-                <label>Tìm kiếm theo tên bệnh nhân:</label>
-                <input type="text" name="keyword" value="<%= keyword %>" />
                 <button type="submit">Tìm kiếm</button>
             </div>
         </form>
@@ -292,15 +289,10 @@
                                     <button class="btn"><i class="fas fa-edit"></i></button>
                                 </a>
                                 <% if (a.getDoctorId() == 0) { %>
-                                <a href="CreateBookingServlet?action=assign&id=<%= a.getAppointmentId() %>
-                                   &status=<%= statusFilter %>
-                                   &fromDate=<%= fromDate %>
-                                   &toDate=<%= toDate %>
-                                   &sortBy=<%= sortBy %>
-                                   &keyword=<%= keyword %>
-                                   &page=<%= currentPageNum %>">
+                                <a href="CreateBookingServlet?action=assign&id=<%= a.getAppointmentId() %>&status=<%= statusFilter %>&fromDate=<%= fromDate %>&toDate=<%= toDate %>&sortBy=<%= sortBy %>&keyword=<%= keyword %>&page=<%= currentPageNum %>">
                                     <button class="btn"><i class="fas fa-user-md"></i></button>
                                 </a>
+
                                 <% } %>
                             </td>
                         </tr>

@@ -21,18 +21,14 @@ public class OTPUtil {
         }
     }
     
-    /**
-     * Generate a 6-digit OTP
-     */
+  
     public static String generateOTP() {
         SecureRandom random = new SecureRandom();
         int otp = 100000 + random.nextInt(900000);
         return String.valueOf(otp);
     }
     
-    /**
-     * Store OTP with expiry time
-     */
+  
     public static void storeOTP(String email, String otp) {
         long expiryTime = System.currentTimeMillis() + (OTP_EXPIRY_MINUTES * 60 * 1000);
         otpStorage.put(email, new OTPData(otp, expiryTime));

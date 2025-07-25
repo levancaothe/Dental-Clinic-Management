@@ -35,7 +35,7 @@ public class EditBookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(request.getParameter("id").trim());
         AppointmentDAO appDao = new AppointmentDAO();
         Appointment app = appDao.getAppointmentById(id);
         UserDAO userDao = new UserDAO();

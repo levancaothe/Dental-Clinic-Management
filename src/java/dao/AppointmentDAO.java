@@ -119,7 +119,7 @@ public class AppointmentDAO extends DBContext {
 
     public List<Appointment> getAllAppointments() {
         List<Appointment> list = new ArrayList<>();
-        String sql = "SELECT * FROM Appointments";
+        String sql = "SELECT * FROM Appointments ORDER BY CreatedAt DESC";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -214,6 +214,8 @@ public class AppointmentDAO extends DBContext {
         if (startDate != null && !startDate.trim().isEmpty() && endDate != null && !endDate.trim().isEmpty()) {
             sql.append(" AND AppointmentDate BETWEEN ? AND ?");
         }
+
+        sql.append(" ORDER BY CreatedAt DESC");
 
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             int i = 1;
@@ -646,5 +648,94 @@ public class AppointmentDAO extends DBContext {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public List<Appointment> getDoctorAppointmentsByDateRange(int doctorId, Date from, Date to, Integer status) {
+        List<Appointment> list = new ArrayList<>();
+        String sql = "SELECT a.AppointmentID, u.FullName AS CustomerName, s.ServiceName, "
+                + "a.AppointmentDate, a.Note, a.Status "
+                + "FROM Appointments a "
+                + "JOIN Users u ON a.CustomerID = u.UserID "
+                + "JOIN Services s ON a.ServiceID = s.ServiceID "
+                + "WHERE a.DoctorID = ? AND a.AppointmentDate BETWEEN ? AND ? ";
+
+        if (status != null) {
+            sql += "AND a.Status = ? ";
+        }
+
+        sql += "ORDER BY a.AppointmentDate DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, doctorId);
+            ps.setDate(2, new java.sql.Date(from.getTime()));
+            ps.setDate(3, new java.sql.Date(to.getTime()));
+
+            if (status != null) {
+                ps.setInt(4, status);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Appointment a = new Appointment();
+                a.setAppointmentId(rs.getInt("AppointmentID"));
+                a.setCustomerName(rs.getString("CustomerName"));
+                a.setServiceName(rs.getString("ServiceName"));
+                a.setAppointmentDate(rs.getTimestamp("AppointmentDate"));
+                a.setNote(rs.getString("Note"));
+                a.setStatus(rs.getInt("Status"));
+                list.add(a);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // Tổng số lịch theo khoảng thời gian
+    public int getTotalAppointments(String fromDate, String toDate) {
+        String sql = "SELECT COUNT(*) FROM Appointments WHERE AppointmentDate BETWEEN ? AND ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, fromDate);
+            ps.setString(2, toDate);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+// Thống kê trạng thái theo khoảng thời gian
+    public Map<String, Integer> getAppointmentStatistics(String fromDate, String toDate) {
+        Map<String, Integer> stats = new LinkedHashMap<>();
+        String sql = "SELECT Status, COUNT(*) AS Count FROM Appointments WHERE AppointmentDate BETWEEN ? AND ? GROUP BY Status";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, fromDate);
+            ps.setString(2, toDate);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int statusCode = rs.getInt("Status");
+                int count = rs.getInt("Count");
+                String statusLabel = switch (statusCode) {
+                    case 0 ->
+                        "Chờ xác nhận";
+                    case 1 ->
+                        "Đã xác nhận";
+                    case 2 ->
+                        "Đã khám";
+                    case 3 ->
+                        "Đã hủy";
+                    default ->
+                        "Không xác định";
+                };
+                stats.put(statusLabel, count);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return stats;
     }
 }

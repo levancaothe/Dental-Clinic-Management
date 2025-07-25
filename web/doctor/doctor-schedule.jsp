@@ -45,6 +45,7 @@
                 color: inherit;
                 cursor: pointer;
             }
+
             .main-wrapper {
                 min-height: calc(100vh - 140px);
                 display: flex;
@@ -62,6 +63,7 @@
                 box-shadow: none;
                 border-radius: 0;
             }
+
             h2 {
                 text-align: center;
                 color: #007acc;
@@ -70,14 +72,67 @@
             }
 
             .filter-form {
-                max-width: 250px;
-                margin: 0 auto 20px;
+                margin: 0 auto 20px auto;
+                display: flex;
+                justify-content: end;
+                align-items: flex-end;
+                gap: 12px;
+                flex-wrap: wrap;
+                padding: 15px 20px;
+                border-radius: 10px;
             }
 
-            .form-select {
+            .filter-form label {
+                font-size: 0.9rem;
+                color: #333;
+                font-weight: 500;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            .filter-form select,
+            .filter-form input[type="date"] {
                 padding: 6px 10px;
-                border: 1px solid #64ccff;
+                font-size: 0.9rem;
+                border: 1px solid #90d5ec;
                 border-radius: 6px;
+                background-color: white;
+                width: 150px;
+            }
+
+            .filter-form button {
+                padding: 7px 16px;
+                background-color: #42bff5;
+                color: white;
+                font-weight: 600;
+                border: none;
+                border-radius: 6px;
+                font-size: 0.95rem;
+                transition: 0.2s ease-in-out;
+            }
+
+            .filter-form button:hover {
+                background-color: #0099dd;
+            }
+
+            .filter-form div {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+
+            button {
+                padding: 6px 14px;
+                background-color: #64ccff;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+
+            button:hover {
+                background-color: #56b8e6;
             }
 
             table {
@@ -156,12 +211,30 @@
                 border-top: 1px solid #ccc;
             }
 
+            .banner {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: #d0f0fd;
+                padding: 10px 20px;
+            }
+
+            .btn-back, .btn {
+                font-size: 20px;
+                color: #0078B4;
+                padding: 6px 10px;
+            }
+
+            .btn:hover, .btn-back:hover {
+                color: #005b8f;
+            }
         </style>
     </head>
     <body>
+
         <div class="banner">
             <div class="logo-box">
-                <a href="doctor/dashboard.jsp">
+                <a href="doctor/dashboard.jsp" class="logo-link">
                     <img src="https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474089BGn/mau-logo-rang-vang-tach-nen_045001529.png" alt="Logo"/>
                 </a>
             </div>
@@ -177,17 +250,32 @@
 
         <div class="main-wrapper">
             <div class="container">
-                <h2>Lịch khám sắp tới của bạn</h2>
-
                 <form method="get" action="DoctorScheduleServlet" class="filter-form">
-                    <select name="status" class="form-select" onchange="this.form.submit()">
-                        <option value="">Tất cả</option>
-                        <option value="0" ${selectedStatus == '0' ? 'selected' : ''}>Đang xử lý</option>
-                        <option value="1" ${selectedStatus == '1' ? 'selected' : ''}>Hoàn tất</option>
-                        <option value="2" ${selectedStatus == '2' ? 'selected' : ''}>Đã huỷ</option>
-                    </select>
+                    <div>
+                        <label for="status">Trạng thái:</label>
+                        <select name="status" id="status" class="form-select" onchange="this.form.submit()">
+                            <option value="">Tất cả</option>
+                            <option value="0" ${selectedStatus == '0' ? 'selected' : ''}>Đang xử lý</option>
+                            <option value="1" ${selectedStatus == '1' ? 'selected' : ''}>Hoàn tất</option>
+                            <option value="2" ${selectedStatus == '2' ? 'selected' : ''}>Đã huỷ</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="fromDate">From:</label>
+                        <input type="date" name="fromDate" id="fromDate" value="${fromDate}" />
+                    </div>
+
+                    <div>
+                        <label for="toDate">To:</label>
+                        <input type="date" name="toDate" id="toDate" value="${toDate}" />
+                    </div>
+
+                    <button type="submit">Tìm kiếm</button>
                 </form>
 
+                <h2>Lịch khám sắp tới của bạn</h2>
+                <!-- Bảng lịch hẹn -->
                 <table>
                     <thead>
                         <tr>
@@ -210,43 +298,29 @@
                         </c:forEach>
                         <c:if test="${empty appointments}">
                             <tr>
-                                <td colspan="5" class="no-appointments">Không có lịch khám nào trong ngày</td>
+                                <td colspan="5" class="no-appointments">Không có lịch khám nào</td>
                             </tr>
                         </c:if>
                     </tbody>
                 </table>
 
+                <!-- Phân trang -->
                 <div class="pagination-container">
                     <c:if test="${totalPages > 1}">
-                        <div class="pagination">
-                            <c:if test="${currentPage > 1}">
-                                <a href="DoctorScheduleServlet?page=1&status=${selectedStatus}">&laquo;</a>
-                                <a href="DoctorScheduleServlet?page=${currentPage - 1}&status=${selectedStatus}">Trước</a>
-                            </c:if>
+                        <c:if test="${currentPage > 1}">
+                            <a href="DoctorScheduleServlet?page=1&status=${selectedStatus}&fromDate=${fromDate}&toDate=${toDate}">&laquo;</a>
+                            <a href="DoctorScheduleServlet?page=${currentPage - 1}&status=${selectedStatus}&fromDate=${fromDate}&toDate=${toDate}">Trước</a>
+                        </c:if>
 
-                            <c:set var="leftDots" value="false" />
-                            <c:set var="rightDots" value="false" />
-                            <c:forEach var="i" begin="1" end="${totalPages}">
-                                <c:choose>
-                                    <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 1 && i <= currentPage + 1)}">
-                                        <a class="${i == currentPage ? 'active' : ''}" href="DoctorScheduleServlet?page=${i}&status=${selectedStatus}">${i}</a>
-                                    </c:when>
-                                    <c:when test="${i < currentPage - 1 && not leftDots}">
-                                        <span>...</span>
-                                        <c:set var="leftDots" value="true" />
-                                    </c:when>
-                                    <c:when test="${i > currentPage + 1 && not rightDots}">
-                                        <span>...</span>
-                                        <c:set var="rightDots" value="true" />
-                                    </c:when>
-                                </c:choose>
-                            </c:forEach>
+                        <c:forEach var="i" begin="1" end="${totalPages}">
+                            <a href="DoctorScheduleServlet?page=${i}&status=${selectedStatus}&fromDate=${fromDate}&toDate=${toDate}"
+                               class="${i == currentPage ? 'active' : ''}">${i}</a>
+                        </c:forEach>
 
-                            <c:if test="${currentPage < totalPages}">
-                                <a href="DoctorScheduleServlet?page=${currentPage + 1}&status=${selectedStatus}">Sau</a>
-                                <a href="DoctorScheduleServlet?page=${totalPages}&status=${selectedStatus}">&raquo;</a>
-                            </c:if>
-                        </div>
+                        <c:if test="${currentPage < totalPages}">
+                            <a href="DoctorScheduleServlet?page=${currentPage + 1}&status=${selectedStatus}&fromDate=${fromDate}&toDate=${toDate}">Sau</a>
+                            <a href="DoctorScheduleServlet?page=${totalPages}&status=${selectedStatus}&fromDate=${fromDate}&toDate=${toDate}">&raquo;</a>
+                        </c:if>
                     </c:if>
                 </div>
             </div>
@@ -255,5 +329,6 @@
         <footer>
             Nụ cười của bạn – Sứ mệnh của chúng tôi!
         </footer>
+
     </body>
 </html>
