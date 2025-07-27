@@ -44,7 +44,7 @@
         + "&keyword=" + java.net.URLEncoder.encode(keyword, "UTF-8")
         + "&page=" + java.net.URLEncoder.encode(pageNumber, "UTF-8");
 
-    // Xử lý tên bệnh nhân và dịch vụ an toàn
+    // Lấy tên bệnh nhân dựa vào id được chọn
     String customerName = "Không rõ";
     if (selectedCustomer != null && !selectedCustomer.equals("null")) {
         try {

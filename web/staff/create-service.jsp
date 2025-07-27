@@ -92,7 +92,7 @@
                         <label for="price">Giá (VNĐ):</label>
                         <input type="number" id="price" name="price"
                                value="<%= request.getAttribute("price") != null ? new java.math.BigDecimal((String)request.getAttribute("price")).stripTrailingZeros().toPlainString() : "" %>"
-                               placeholder="Ví dụ: 500000" min="0" step="1000" />
+                               placeholder="Ví dụ: 500000" min="0" step="1" />
                         <span class="error-message" id="priceError"></span>
 
                         <label for="status">Trạng thái:</label>

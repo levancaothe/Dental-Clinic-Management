@@ -108,7 +108,8 @@
                 String dobYear = request.getAttribute("dobYear") != null ? (String) request.getAttribute("dobYear") : "";   
                 String phoneNumber = request.getAttribute("phoneNumber") != null ? (String) request.getAttribute("phoneNumber") : "";
                 String email = request.getAttribute("email") != null ? (String) request.getAttribute("email") : "";
-                String address = request.getAttribute("address") != null ? (String) request.getAttribute("address") : "";                
+                String address = request.getAttribute("address") != null ? (String) request.getAttribute("address") : ""; 
+                
                 // Đặt giá trị mặc định là ngày hiện tại nếu không có dữ liệu từ request
                 java.util.Calendar cal = java.util.Calendar.getInstance();
                 String defaultDobDay = dobDay.isEmpty() ? String.valueOf(cal.get(java.util.Calendar.DAY_OF_MONTH)) : dobDay;
